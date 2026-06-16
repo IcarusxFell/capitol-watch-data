@@ -1,0 +1,25 @@
+name: Feed health check
+
+# Dead-man's-switch: fails (and emails you) if the published feed goes stale or
+# unexpectedly small — covering the cases the update job's own failure email
+# can't (silent scheduler stop, green-but-stale runs).
+
+on:
+  schedule:
+    - cron: "0 13 * * *"   # daily 13:00 UTC, a few hours after the update job
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  healthcheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check feed freshness
+        run: python -m scraper.healthcheck

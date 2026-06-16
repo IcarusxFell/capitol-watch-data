@@ -73,6 +73,19 @@ OCR for scanned House filings also needs system packages:
 - ✅ **Stdlib-only networking** (no `requests`/`bs4`) keeps the dependency surface
   small — just `pypdf` (+ optional OCR).
 
+## Monitoring (so you're alerted to failures)
+
+Two layers, both free:
+
+1. **Update job failure → GitHub emails you.** Enable it once at
+   **github.com → Settings → Notifications → Actions → "Send notifications for
+   failed workflows only."** Covers parser breaks (the quality gates fail the run).
+2. **Feed goes stale → health check emails you.** `.github/workflows/health-check.yml`
+   runs daily and fails if `data/metadata.json` is older than 36h or the counts
+   look too small — catching the cases a failed-job email can't (the schedule
+   silently stopping, or a green run that didn't actually refresh the data).
+   Logic is in `scraper/healthcheck.py` (unit-tested).
+
 ## Maintenance reality (honest)
 
 The recurring work is keeping the **House PDF parser** happy as filing layouts
