@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # Keeps the GitHub Actions (and their pinned SHAs) up to date.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+  # Keeps the pinned Python dependencies patched.
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
